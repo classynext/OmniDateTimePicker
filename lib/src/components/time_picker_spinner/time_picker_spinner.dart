@@ -13,6 +13,8 @@ class TimePickerSpinner extends StatelessWidget {
   final int minutesInterval;
   final int secondsInterval;
   final bool isForce2Digits;
+  final int firstHour;
+  final int lastHour;
 
   final double height;
   final double diameterRatio;
@@ -20,6 +22,7 @@ class TimePickerSpinner extends StatelessWidget {
   final double squeeze;
   final double magnification;
   final bool looping;
+  final bool isLimitHours;
   final Widget selectionOverlay;
 
   const TimePickerSpinner({
@@ -30,6 +33,9 @@ class TimePickerSpinner extends StatelessWidget {
     this.squeeze = 1,
     this.magnification = 1.1,
     this.looping = false,
+    this.isLimitHours = false,
+    this.firstHour = 0,
+    this.lastHour = 23,
     this.selectionOverlay = const CupertinoPickerDefaultSelectionOverlay(),
     required this.amText,
     required this.pmText,
@@ -126,7 +132,8 @@ class TimePickerSpinner extends StatelessWidget {
                                       : 0);
 
                           final bool isDisabled =
-                              _isHourDisabled(hourValue, datetimeBloc.state);
+                              _isHourDisabled(hourValue, datetimeBloc.state) || _isLimitHourDisabled(hourValue, firstHour, lastHour);
+
 
                           if (isForce2Digits) {
                             hour = hour.padLeft(2, '0');
@@ -298,6 +305,24 @@ class TimePickerSpinner extends StatelessWidget {
 
     return false;
   }
+
+  bool _isLimitHourDisabled(int hour, int firstHour, int lastHour) {
+    if (!isLimitHours) {
+      return false;
+    }
+    // For hour validation, only compare at the hour level
+    if (hour < firstHour) {
+      return true;
+    }
+
+    if (hour > lastHour) {
+      return true;
+    }
+
+    return false;
+  }
+
+
 
   bool _isMinuteDisabled(int minute, OmniDatetimePickerState state) {
     // For minute validation, compare at the minute level when on the exact hour
