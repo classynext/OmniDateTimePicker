@@ -23,6 +23,9 @@ class SinglePickerDialog extends StatefulWidget {
   final int? secondsInterval;
   final bool? isForce2Digits;
   final bool? looping;
+  final int? firstHour;
+  final int? lastHour;
+  final bool? isLimitHours;
   final Widget? selectionOverlay;
 
   final EdgeInsets? padding;
@@ -57,6 +60,9 @@ class SinglePickerDialog extends StatefulWidget {
     this.constraints,
     this.type,
     this.actionsBuilder,
+    this.firstHour,
+    this.lastHour,
+    this.isLimitHours,
   });
 
   @override
@@ -120,6 +126,9 @@ class _SinglePickerDialogState extends State<SinglePickerDialog> {
                         const CupertinoPickerDefaultSelectionOverlay(),
                     separator: widget.separator,
                     type: widget.type ?? OmniDateTimePickerType.dateAndTime,
+                    isLimitHours: widget.isLimitHours ?? false,
+                    firstHour: widget.firstHour ?? 0,
+                    lastHour: widget.lastHour ?? 23,
                   ),
                 ),
               ),

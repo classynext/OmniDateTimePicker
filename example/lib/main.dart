@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
+void main() => runApp(MyApp());
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -29,10 +31,21 @@ class OmniExample extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
+            SizedBox(height: 100),
             ElevatedButton(
               onPressed: () async {
-                final DateTime? dateTime =
-                    await showOmniDateTimePicker(context: context);
+                final DateTime? dateTime = await showOmniDateTimePicker(
+                  context: context,
+                  minutesInterval: 60,
+                  is24HourMode: true,
+                  firstDate: DateTime.now().add(const Duration(days: 1)),
+                  lastDate: DateTime.now().add(const Duration(days: 30)),
+                  isLimitHours: true,
+                  firstHour: 8,
+                  lastHour: 17,
+                  selectableDayPredicate: (DateTime val) =>
+                      val.weekday == 6 || val.weekday == 7 ? false : true,
+                );
 
                 // Use dateTime here
                 debugPrint('dateTime: $dateTime');
@@ -49,9 +62,11 @@ class OmniExample extends StatelessWidget {
                 if (result != null) {
                   // This should show the second and millisecond fields set to zero after the fix
                   debugPrint(
-                      'Selected DateTime: ${result.toUtc().toIso8601String()}');
+                    'Selected DateTime: ${result.toUtc().toIso8601String()}',
+                  );
                   debugPrint(
-                      'Seconds: ${result.second}, Milliseconds: ${result.millisecond}');
+                    'Seconds: ${result.second}, Milliseconds: ${result.millisecond}',
+                  );
                 }
               },
               child: const Text('Test 24-Hour Mode (check seconds)'),
@@ -67,9 +82,11 @@ class OmniExample extends StatelessWidget {
                 if (result != null) {
                   // This should show microseconds as 0 even when seconds are enabled
                   debugPrint(
-                      'Selected DateTime with seconds: ${result.toUtc().toIso8601String()}');
+                    'Selected DateTime with seconds: ${result.toUtc().toIso8601String()}',
+                  );
                   debugPrint(
-                      'Seconds: ${result.second}, Microseconds: ${result.microsecond}');
+                    'Seconds: ${result.second}, Microseconds: ${result.microsecond}',
+                  );
                 }
               },
               child: const Text('Test with Seconds (check microseconds)'),

@@ -18,6 +18,9 @@ class TimePickerSpinnerBloc
   final DateTime firstDateTime;
   final DateTime lastDateTime;
   final DateTime initialDateTime;
+  final int firstHour;
+  final int lastHour;
+  final bool isLimitHours;
 
   TimePickerSpinnerBloc({
     required this.amText,
@@ -30,6 +33,9 @@ class TimePickerSpinnerBloc
     required this.firstDateTime,
     required this.lastDateTime,
     required this.initialDateTime,
+    required this.firstHour,
+    required this.lastHour,
+    required this.isLimitHours,
   }) : super(TimePickerSpinnerInitial()) {
     on<Initialize>(_initialize);
 
@@ -85,6 +91,9 @@ class TimePickerSpinnerBloc
       String hourString = hourOfPeriod == 0 ? '12' : hourOfPeriod.toString();
 
       return hours.indexWhere((e) => e == hourString);
+    }
+    if (isLimitHours) {
+      return findClosestIndex(hours, firstHour);
     }
 
     return hours.indexWhere((e) => e == now.hour.toString());

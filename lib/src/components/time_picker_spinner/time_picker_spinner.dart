@@ -63,6 +63,10 @@ class TimePickerSpinner extends StatelessWidget {
         firstDateTime: datetimeBloc.state.firstDate,
         lastDateTime: datetimeBloc.state.lastDate,
         initialDateTime: datetimeBloc.state.dateTime,
+        firstHour: firstHour,
+        lastHour: lastHour,
+        isLimitHours: isLimitHours,
+
       ),
       child: BlocConsumer<TimePickerSpinnerBloc, TimePickerSpinnerState>(
         listenWhen: (previous, current) {
@@ -92,6 +96,7 @@ class TimePickerSpinner extends StatelessWidget {
                 textDirection: TextDirection.ltr,
                 children: [
                   /// Hours
+                  
                   Expanded(
                     child: CupertinoPicker(
                       scrollController: FixedExtentScrollController(
@@ -115,12 +120,18 @@ class TimePickerSpinner extends StatelessWidget {
                           datetimeBloc.add(UpdateHour(hour: hourValue));
                         } else {
                           final hourValue = int.parse(state.hours[index]);
-                          datetimeBloc.add(UpdateHour(hour: hourValue));
+                          if (isLimitHours && _isLimitHourDisabled(hourValue, firstHour, lastHour)) {
+                            // If the selected hour is disabled due to limit, do not update
+                            return;
+                          } else {
+                            datetimeBloc.add(UpdateHour(hour: hourValue));
+                          }
+                          // datetimeBloc.add(UpdateHour(hour: hourValue));
                         }
                       },
                       children: List.generate(
                         growable: false,
-                        state.hours.length,
+                        state.hours.where((element) => isLimitHours ? !_isLimitHourDisabled(int.parse(element), firstHour, lastHour) : true).length,
                         (index) {
                           String hour = state.hours[index];
                           // Calculate hour value based on current state rather than controller selection
